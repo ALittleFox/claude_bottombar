@@ -32,23 +32,50 @@
 
 ## 安装
 
-```bash
-# 软链接到 skills 目录
-ln -s "$(pwd)" ~/.claude/skills/claude_bottombar
+### 方式一：手动克隆
 
-# 注册为 status line
+```bash
+git clone https://github.com/ALittleFox/claude_bottombar.git /path/to/claude_bottombar
+ln -s /path/to/claude_bottombar ~/.claude/skills/claude_bottombar
+
 jq '. + {
   statusLine: {
     type: "command",
-    command: "'$(pwd)'/bin/statusbar.sh",
+    command: "/path/to/claude_bottombar/bin/statusbar.sh",
     padding: 1,
     refreshInterval: 30
   }
 }' ~/.claude/settings.json > ~/.claude/settings.json.tmp \
   && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
+
+/reload-plugins
 ```
 
-然后执行 `/reload-plugins`。
+### 方式二：复制到 Skills 目录
+
+```bash
+git clone https://github.com/ALittleFox/claude_bottombar.git
+cp -r claude_bottombar ~/.claude/skills/claude_bottombar
+
+jq '. + {
+  statusLine: {
+    type: "command",
+    command: "'$HOME'/.claude/skills/claude_bottombar/bin/statusbar.sh",
+    padding: 1,
+    refreshInterval: 30
+  }
+}' ~/.claude/settings.json > ~/.claude/settings.json.tmp \
+  && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
+
+/reload-plugins
+```
+
+### 方式三：Marketplace
+
+```bash
+/plugin marketplace add https://github.com/ALittleFox/claude_bottombar.git
+/plugin install claude_bottombar@<marketplace-name>
+```
 
 ## 卸载
 
@@ -56,13 +83,6 @@ jq '. + {
 jq 'del(.statusLine)' ~/.claude/settings.json > ~/.claude/settings.json.tmp \
   && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
 rm ~/.claude/skills/claude_bottombar
-```
-
-## 安装步骤
-
-```bash
-git clone https://github.com/ALittleFox/claude_bottombar.git ~/.claude/skills/claude_bottombar
-# 然后按上方安装步骤配置
 ```
 
 ## 目录结构

@@ -32,23 +32,50 @@ A zero-dependency Claude Code status bar — shows project, git branch, token us
 
 ## Install
 
-```bash
-# Symlink into skills directory
-ln -s "$(pwd)" ~/.claude/skills/claude_bottombar
+### Method 1: Manual Clone
 
-# Register as status line provider
+```bash
+git clone https://github.com/ALittleFox/claude_bottombar.git /path/to/claude_bottombar
+ln -s /path/to/claude_bottombar ~/.claude/skills/claude_bottombar
+
 jq '. + {
   statusLine: {
     type: "command",
-    command: "'$(pwd)'/bin/statusbar.sh",
+    command: "/path/to/claude_bottombar/bin/statusbar.sh",
     padding: 1,
     refreshInterval: 30
   }
 }' ~/.claude/settings.json > ~/.claude/settings.json.tmp \
   && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
+
+/reload-plugins
 ```
 
-Then run `/reload-plugins`.
+### Method 2: Copy to Skills Directory
+
+```bash
+git clone https://github.com/ALittleFox/claude_bottombar.git
+cp -r claude_bottombar ~/.claude/skills/claude_bottombar
+
+jq '. + {
+  statusLine: {
+    type: "command",
+    command: "'$HOME'/.claude/skills/claude_bottombar/bin/statusbar.sh",
+    padding: 1,
+    refreshInterval: 30
+  }
+}' ~/.claude/settings.json > ~/.claude/settings.json.tmp \
+  && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
+
+/reload-plugins
+```
+
+### Method 3: Marketplace
+
+```bash
+/plugin marketplace add https://github.com/ALittleFox/claude_bottombar.git
+/plugin install claude_bottombar@<marketplace-name>
+```
 
 ## Uninstall
 
@@ -56,13 +83,6 @@ Then run `/reload-plugins`.
 jq 'del(.statusLine)' ~/.claude/settings.json > ~/.claude/settings.json.tmp \
   && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
 rm ~/.claude/skills/claude_bottombar
-```
-
-## Remote Install
-
-```bash
-git clone https://github.com/ALittleFox/claude_bottombar.git ~/.claude/skills/claude_bottombar
-# then follow the install steps above
 ```
 
 ## Structure
