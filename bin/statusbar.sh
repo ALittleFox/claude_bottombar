@@ -8,7 +8,7 @@ INPUT_JSON=$(cat)
 CWD=$(echo "$INPUT_JSON" | jq -r '.cwd // "?"')
 
 # --- Extract git branch -------------------------------------------------
-GIT_BRANCH=$(cd "$CWD" 2>/dev/null && git branch --show-current 2>/dev/null)
+GIT_BRANCH=$(cd "$CWD" 2>/dev/null && git branch --show-current 2>/dev/null || true)
 
 # Use only the project directory name
 DIR_NAME=$(basename "$CWD")
@@ -80,6 +80,49 @@ else
     TOK_DISPLAY="--"
 fi
 
+# --- Collect configured LSP servers from enabledPlugins -----------------
+LSP_CONFIGURED=""
+if [[ -f "$HOME/.claude/settings.json" ]]; then
+    LSP_CONFIGURED=$(jq -r '.enabledPlugins // {} | keys[] | select(contains("lsp"))' \
+        "$HOME/.claude/settings.json" 2>/dev/null | sed 's/-lsp@.*//' | sort -u)
+fi
+
+# --- Filter LSP servers active for current project -----------------------
+LSP_EXTENSIONS() {
+    case "$1" in
+        clangd)    echo "c h cpp hpp cc cxx" ;;
+        pyright)   echo "py pyi" ;;
+        typescript) echo "ts tsx js jsx" ;;
+        *)         echo "" ;;
+    esac
+}
+LSP_PROJECT_ACTIVE=""
+if [[ -n "$LSP_CONFIGURED" ]]; then
+    while IFS= read -r server; do
+        [[ -z "$server" ]] && continue
+        exts=$(LSP_EXTENSIONS "$server")
+        if [[ -n "$exts" ]]; then
+            # Build find pattern: -name "*.c" -o -name "*.h" ...
+            find_args=""
+            for ext in $exts; do
+                find_args+=" -name \"*.$ext\" -o"
+            done
+            find_args="${find_args% -o}"  # strip trailing -o
+            if eval "find \"$CWD\" -maxdepth 3 -type f $find_args 2>/dev/null | head -1 | grep -q ."; then
+                LSP_PROJECT_ACTIVE+="${server}"$'\n'
+            fi
+        fi
+    done <<< "$LSP_CONFIGURED"
+    LSP_PROJECT_ACTIVE=$(echo "$LSP_PROJECT_ACTIVE" | sed '/^$/d' | sort -u)
+fi
+
+# --- Format LSP display --------------------------------------------------
+LSP_DISPLAY=""
+if [[ -n "$LSP_PROJECT_ACTIVE" ]]; then
+    LSP_ITEMS=$(echo "$LSP_PROJECT_ACTIVE" | sed 's/^/'"${GRN}"'/; s/$/'"${RST}"'/' | paste -sd ',' - | sed 's/,/'"${RST}"', '"${GRN}"'/g')
+    LSP_DISPLAY="LSP: [ ${LSP_ITEMS} ]"
+fi
+
 # Build directory display: dirname (git: branch)
 if [[ -n "$GIT_BRANCH" ]]; then
     DIR_DISPLAY="${DIR_NAME} (git: ${GIT_BRANCH})"
@@ -87,8 +130,12 @@ else
     DIR_DISPLAY="${DIR_NAME}"
 fi
 
-# --- Output (two lines: dir, mcp) -----------------------------------
+# --- Output (dir, mcp, lsp) ------------------------------------------
 printf "${DIM}──${RST}  ${CYN}%-30s${RST}  ${YLW}Tok: %s${RST}  ${DIM}──${RST}\n" \
     "$DIR_DISPLAY" "$TOK_DISPLAY"
 printf "${DIM}──${RST}  %s  ${DIM}──${RST}\n" \
     "$MCP_DISPLAY"
+if [[ -n "$LSP_DISPLAY" ]]; then
+    printf "${DIM}──${RST}  %s  ${DIM}──${RST}\n" \
+        "$LSP_DISPLAY"
+fi

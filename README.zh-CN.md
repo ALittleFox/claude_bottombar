@@ -82,7 +82,20 @@ jq '. + {
 
 ```bash
 /plugin marketplace add https://github.com/ALittleFox/claude_bottombar.git
-/plugin install claude_bottombar@<marketplace-name>
+/plugin install claude_bottombar@claude_bottombar
+```
+
+或从 Claude Plugin Hub 安装：
+
+```bash
+npx claudepluginhub alittlefox/claude_bottombar
+```
+
+或手动添加 ClaudePluginHub marketplace：
+
+```bash
+/plugin marketplace add https://www.claudepluginhub.com/api/plugins/alittlefox-claude-bottombar/marketplace.json
+/plugin install alittlefox-claude-bottombar@cpd-alittlefox-claude-bottombar
 ```
 
 ## 卸载
