@@ -1,21 +1,36 @@
-# statusbar
+# claude_bottombar
 
-Claude Code 原生状态栏插件，在终端底部持续显示当前项目目录、git 分支和活跃 MCP 服务器。
+A zero-dependency Claude Code status bar — shows project, git branch, token usage, and MCP servers at a glance.
 
-## 效果
+## Preview
 
 ```
-──  cloude-plugin-info (git: main)  Tok: 12.3K/200K  ──
-──  MCP: [ codegraph: ●, memory: ● ]                 ──
+──  my-project (git: main)  Tok: 12.3K/200K  ──
+──  MCP: [ codegraph: ●, memory: ○ ]         ──
 ```
 
-## 安装
+- `●` green = MCP called this session, `○` dim = configured but idle
+- MCP list is read from config files immediately — no warm-up needed
+
+## How It Works
+
+- Reads status line JSON from stdin (provided by Claude Code)
+- Scans `~/.claude.json` + `<cwd>/.mcp.json` for configured MCP servers
+- Cross-references transcript JSONL to mark which servers have been called
+- Outputs two ANSI-colored lines
+
+## Requirements
+
+- `bash`
+- `jq` (bundled with macOS)
+
+## Install
 
 ```bash
-# 软链接到 skills 目录（实时调试）
-ln -s $(pwd) ~/.claude/skills/statusbar
+# Symlink into skills directory
+ln -s "$(pwd)" ~/.claude/skills/claude_bottombar
 
-# 写入 statusLine 配置
+# Register as status line provider
 jq '. + {
   statusLine: {
     type: "command",
@@ -27,26 +42,29 @@ jq '. + {
   && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
 ```
 
-然后 `/reload-plugins`。
+Then run `/reload-plugins`.
 
-## 卸载
+## Uninstall
 
 ```bash
-# 移除 statusLine
 jq 'del(.statusLine)' ~/.claude/settings.json > ~/.claude/settings.json.tmp \
   && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
-
-# 移除插件
-rm ~/.claude/skills/statusbar
+rm ~/.claude/skills/claude_bottombar
 ```
 
-## 结构
+## Remote Install
+
+```bash
+git clone https://github.com/ALittleFox/claude_bottombar.git ~/.claude/skills/claude_bottombar
+# then follow the install steps above
+```
+
+## Structure
 
 ```
-├── .claude-plugin/plugin.json
-├── bin/statusbar.sh          # 核心脚本 (bash + jq)
-├── hooks/hooks.json          # SessionStart 钩子
-├── hooks/fix-statusline.sh   # 自动修正路径
-├── skills/statusbar-plugin/  # 安装/卸载技能
-└── .gitignore
+.claude-plugin/plugin.json    # manifest
+bin/statusbar.sh              # core script (bash + jq)
+hooks/hooks.json              # SessionStart → auto fix path
+hooks/fix-statusline.sh       # rewrites statusLine to absolute path
+skills/statusbar-plugin/      # install / uninstall skill
 ```

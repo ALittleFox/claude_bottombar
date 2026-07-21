@@ -1,5 +1,5 @@
 {
-  "name": "statusbar",
+  "name": "claude_bottombar",
   "version": "1.0.0",
   "description": "A minimal status bar showing current working directory and active MCP servers",
   "author": {
