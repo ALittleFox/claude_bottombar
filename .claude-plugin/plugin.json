@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "A minimal status bar showing current working directory and active MCP servers",
   "author": {
-    "name": "Status Bar Plugin"
+    "name": "zxc"
   },
   "license": "MIT",
-  "keywords": ["statusbar", "mcp", "workspace"],
+  "keywords": ["statusbar", "mcp", "workspace", "claude_bottombar"],
   "hooks": "hooks",
   "skills": "skills"
 }
