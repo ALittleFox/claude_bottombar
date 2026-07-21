@@ -5,8 +5,14 @@ A zero-dependency Claude Code status bar — shows project, git branch, token us
 ## Preview
 
 ```
-──  my-project (git: main)  Tok: 12.3K/200K  ──
-──  MCP: [ codegraph: ●, memory: ○ ]         ──
+✻ Worked for 34s
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ commit this
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   ──  cloude-plugin-info (git: main)  Tok: 0K/1000K  ──
+   ──  MCP: [ codegraph: ○, Figma Desktop: ○ ]  ──
+  ⏵⏵ accept edits on (shift+tab to cycle)
 ```
 
 - `●` green = MCP called this session, `○` dim = configured but idle
