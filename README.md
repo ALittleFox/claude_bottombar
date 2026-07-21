@@ -1,6 +1,6 @@
 # claude_bottombar
 
-A zero-dependency Claude Code status bar — shows project, git branch, token usage, and MCP servers at a glance.
+A zero-dependency Claude Code status bar — shows project, git branch, token usage, MCP servers, and active LSP servers at a glance.
 
 ## Preview
 
@@ -12,18 +12,21 @@ A zero-dependency Claude Code status bar — shows project, git branch, token us
 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
    ──  cloude-plugin-info (git: main)  Tok: 0K/1000K  ──
    ──  MCP: [ codegraph: ○, Figma Desktop: ○ ]  ──
+   ──  LSP: [ typescript ]                      ──
   ⏵⏵ accept edits on (shift+tab to cycle)
 ```
 
-- `●` green = MCP called this session, `○` dim = configured but idle
-- MCP list is read from config files immediately — no warm-up needed
+- **Line 1**: project name, git branch, token usage
+- **Line 2**: MCP servers, `●` called this session / `○` idle
+- **Line 3**: LSP servers active for the current project (auto-detected by file types; hidden when no match)
 
 ## How It Works
 
 - Reads status line JSON from stdin (provided by Claude Code)
-- Scans `~/.claude.json` + `<cwd>/.mcp.json` for configured MCP servers
-- Cross-references transcript JSONL to mark which servers have been called
-- Outputs two ANSI-colored lines
+- Scans `~/.claude.json` + `<cwd>/.mcp.json` for MCP servers
+- Cross-references transcript JSONL to mark which MCP servers have been called
+- Detects LSP servers from enabled plugins, filters by project file types
+- Outputs ANSI-colored lines
 
 ## Requirements
 
