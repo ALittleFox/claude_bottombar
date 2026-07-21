@@ -28,7 +28,15 @@
 ## 环境要求
 
 - `bash`
-- `jq`（macOS 内置）
+- `jq` — 各平台安装命令：
+
+| 平台 | 命令 |
+|------|------|
+| macOS | `brew install jq`，或装 Xcode CLI 自带 `/usr/bin/jq` |
+| Linux (Debian/Ubuntu) | `sudo apt install jq` |
+| Linux (Arch) | `sudo pacman -S jq` |
+| Linux (Fedora) | `sudo dnf install jq` |
+| Windows | `scoop install jq` 或 `choco install jq` |
 
 ## 安装
 

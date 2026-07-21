@@ -28,7 +28,15 @@ A zero-dependency Claude Code status bar — shows project, git branch, token us
 ## Requirements
 
 - `bash`
-- `jq` (bundled with macOS)
+- `jq` — install via:
+
+| Platform | Command |
+|----------|---------|
+| macOS | `brew install jq`, or Xcode CLI (ships `/usr/bin/jq`) |
+| Linux (Debian/Ubuntu) | `sudo apt install jq` |
+| Linux (Arch) | `sudo pacman -S jq` |
+| Linux (Fedora) | `sudo dnf install jq` |
+| Windows | `scoop install jq` or `choco install jq` |
 
 ## Install
 
