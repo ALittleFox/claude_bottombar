@@ -14,8 +14,7 @@ GIT_BRANCH=$(cd "$CWD" 2>/dev/null && git branch --show-current 2>/dev/null || t
 DIR_NAME=$(basename "$CWD")
 MODEL=$(echo "$INPUT_JSON" | jq -r '.model.display_name // .model.id // "--"')
 TRANSCRIPT=$(echo "$INPUT_JSON" | jq -r '.transcript_path // ""')
-TOK_IN=$(echo "$INPUT_JSON" | jq -r '.context_window.current_usage.input_tokens // 0')
-TOK_TOTAL=$(echo "$INPUT_JSON" | jq -r '.context_window.context_window_size // 0')
+USED_PCT=$(echo "$INPUT_JSON" | jq -r '.context_window.used_percentage // 0')
 
 # --- ANSI colors (define early, used in MCP formatting) ---------------
 DIM=$'\033[2m'
@@ -75,11 +74,7 @@ else
     MCP_DISPLAY="MCP: [ ${MCP_ITEMS} ]"
 fi
 
-if [[ "$TOK_TOTAL" -gt 0 ]]; then
-    TOK_DISPLAY="$(echo "scale=1; $TOK_IN/1000" | bc)K/$(echo "scale=0; $TOK_TOTAL/1000" | bc)K"
-else
-    TOK_DISPLAY="--"
-fi
+TOK_DISPLAY="$(printf "%.0f%%" "$USED_PCT")"
 
 # --- Collect configured LSP servers from enabledPlugins -----------------
 LSP_CONFIGURED=""
