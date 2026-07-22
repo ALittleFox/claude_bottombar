@@ -10,7 +10,7 @@ A zero-dependency Claude Code status bar — shows project, git branch, token us
 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ❯ commit this
 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   ──  cloude-plugin-info (git: main)  Tok: 0K/1000K  ──
+   ──  cloude-plugin-info (git: main)  Tok: 20%  ──
    ──  MCP: [ codegraph: ○, Figma Desktop: ○ ]  ──
    ──  LSP: [ typescript ]                      ──
   ⏵⏵ accept edits on (shift+tab to cycle)
