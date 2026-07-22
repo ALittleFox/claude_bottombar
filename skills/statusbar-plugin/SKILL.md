@@ -18,7 +18,7 @@ A Claude Code status bar showing project directory, git branch, token usage, mod
   "type": "command",
   "command": "<path>/bin/statusbar.sh",
   "padding": 1,
-  "refreshInterval": 30
+  "refreshInterval": 10
 }
 ```
 

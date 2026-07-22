@@ -58,7 +58,7 @@ jq '. + {
     type: "command",
     command: "/path/to/claude_bottombar/bin/statusbar.sh",
     padding: 1,
-    refreshInterval: 30
+    refreshInterval: 10
   }
 }' ~/.claude/settings.json > ~/.claude/settings.json.tmp \
   && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
@@ -77,7 +77,7 @@ jq '. + {
     type: "command",
     command: "'$HOME'/.claude/skills/claude_bottombar/bin/statusbar.sh",
     padding: 1,
-    refreshInterval: 30
+    refreshInterval: 10
   }
 }' ~/.claude/settings.json > ~/.claude/settings.json.tmp \
   && mv ~/.claude/settings.json.tmp ~/.claude/settings.json
