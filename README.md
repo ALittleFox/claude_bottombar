@@ -87,7 +87,23 @@ jq '. + {
 
 ### Method 3: Marketplace
 
-> **Known issue**: Claude Code currently uses SSH instead of HTTPS when cloning from marketplace, which may fail with host key errors. This is a [known bug](https://github.com/anthropics/claude-code/issues/26588). In the meantime, use Method 1 or 2 instead.
+> **Known issue**: Claude Code currently uses SSH instead of HTTPS when cloning from marketplace, which may fail with host key errors. This is a [known bug](https://github.com/anthropics/claude-code/issues/26588).
+>
+> **Workaround** — force Git to use HTTPS for GitHub:
+> ```bash
+> git config --global url."https://github.com/".insteadOf "git@github.com:"
+> ```
+> ⚠️ **Revert** (restores SSH):
+> ```bash
+> git config --global --unset url."https://github.com/".insteadOf
+> ```
+
+From GitHub:
+
+```bash
+/plugin marketplace add https://github.com/ALittleFox/claude_bottombar.git
+/plugin install claude_bottombar@claude_bottombar
+```
 
 Via Claude Plugin Hub:
 

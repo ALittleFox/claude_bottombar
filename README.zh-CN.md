@@ -89,7 +89,23 @@ jq '. + {
 
 ### 方式三：Marketplace
 
-> **已知问题**：Claude Code 当前从 marketplace 克隆时使用 SSH 而非 HTTPS，可能因 host key 验证失败而无法安装。这是[已知 Bug](https://github.com/anthropics/claude-code/issues/26588)。建议暂时使用方式一或方式二。
+> **已知问题**：Claude Code 当前从 marketplace 克隆时使用 SSH 而非 HTTPS，可能因 host key 验证失败而无法安装。这是[已知 Bug](https://github.com/anthropics/claude-code/issues/26588)。
+>
+> **临时方案** — 强制 Git 对 GitHub 使用 HTTPS：
+> ```bash
+> git config --global url."https://github.com/".insteadOf "git@github.com:"
+> ```
+> ⚠️ **恢复命令**（还原 SSH）：
+> ```bash
+> git config --global --unset url."https://github.com/".insteadOf
+> ```
+
+从 GitHub 安装：
+
+```bash
+/plugin marketplace add https://github.com/ALittleFox/claude_bottombar.git
+/plugin install claude_bottombar@claude_bottombar
+```
 
 通过 Claude Plugin Hub：
 
