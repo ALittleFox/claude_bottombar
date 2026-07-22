@@ -83,18 +83,13 @@ jq '. + {
 
 ### Method 3: Marketplace
 
-```bash
-/plugin marketplace add https://github.com/ALittleFox/claude_bottombar.git
-/plugin install claude_bottombar@claude_bottombar
-```
-
-Or from Claude Plugin Hub:
+Via Claude Plugin Hub:
 
 ```bash
 npx claudepluginhub alittlefox/claude_bottombar
 ```
 
-Or manually add ClaudePluginHub marketplace:
+Or manually:
 
 ```bash
 /plugin marketplace add https://www.claudepluginhub.com/api/plugins/alittlefox-claude-bottombar/marketplace.json
