@@ -12,6 +12,7 @@ GIT_BRANCH=$(cd "$CWD" 2>/dev/null && git branch --show-current 2>/dev/null || t
 
 # Use only the project directory name
 DIR_NAME=$(basename "$CWD")
+MODEL=$(echo "$INPUT_JSON" | jq -r '.model.display_name // .model.id // "--"')
 TRANSCRIPT=$(echo "$INPUT_JSON" | jq -r '.transcript_path // ""')
 TOK_IN=$(echo "$INPUT_JSON" | jq -r '.context_window.current_usage.input_tokens // 0')
 TOK_TOTAL=$(echo "$INPUT_JSON" | jq -r '.context_window.context_window_size // 0')
@@ -131,8 +132,9 @@ else
 fi
 
 # --- Output (dir, mcp, lsp) ------------------------------------------
-printf "${DIM}──${RST}  ${CYN}%-30s${RST}  ${YLW}Tok: %s${RST}  ${DIM}──${RST}\n" \
-    "$DIR_DISPLAY" "$TOK_DISPLAY"
+MAG=$'\033[35m'  # magenta for model name
+printf "${DIM}──${RST}  ${CYN}%-25s${RST}  ${MAG}%s${RST}  ${YLW}Tok: %s${RST}  ${DIM}──${RST}\n" \
+    "$DIR_DISPLAY" "$MODEL" "$TOK_DISPLAY"
 printf "${DIM}──${RST}  %s  ${DIM}──${RST}\n" \
     "$MCP_DISPLAY"
 if [[ -n "$LSP_DISPLAY" ]]; then

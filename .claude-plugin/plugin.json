@@ -1,6 +1,6 @@
 {
   "name": "claude_bottombar",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A minimal status bar showing current working directory and active MCP servers",
   "author": {
     "name": "zxc"
