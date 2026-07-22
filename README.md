@@ -43,6 +43,10 @@ A zero-dependency Claude Code status bar — shows project, git branch, token us
 
 ## Install
 
+> **Why the `jq` step?** Claude Code plugins cannot declare `statusLine` in their manifest — it must be written directly to `~/.claude/settings.json`. The `jq` command below does this so the status bar appears immediately after `/reload-plugins`. If you skip it, the SessionStart hook will auto-configure it on next Claude Code restart.
+
+After installation, run `/reload-plugins` to activate.
+
 ### Method 1: Manual Clone
 
 ```bash
@@ -82,6 +86,8 @@ jq '. + {
 ```
 
 ### Method 3: Marketplace
+
+> **Known issue**: Claude Code currently uses SSH instead of HTTPS when cloning from marketplace, which may fail with host key errors. This is a [known bug](https://github.com/anthropics/claude-code/issues/26588). In the meantime, use Method 1 or 2 instead.
 
 Via Claude Plugin Hub:
 

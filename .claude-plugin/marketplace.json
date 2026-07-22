@@ -1,0 +1,25 @@
+{
+  "name": "claude_bottombar",
+  "owner": {
+    "name": "zxc"
+  },
+  "plugins": [
+    {
+      "name": "claude_bottombar",
+      "source": "./",
+      "description": "A Claude Code status bar showing project directory, git branch, token usage, MCP servers, and active LSP servers",
+      "author": {
+        "name": "zxc"
+      },
+      "repository": "https://github.com/ALittleFox/claude_bottombar",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "statusbar",
+        "mcp",
+        "lsp",
+        "workspace"
+      ]
+    }
+  ]
+}

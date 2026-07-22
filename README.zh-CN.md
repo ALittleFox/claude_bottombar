@@ -45,6 +45,10 @@
 
 ## 安装
 
+> **为什么需要 `jq` 步骤？** Claude Code 插件无法在清单中声明 `statusLine`，必须直接写入 `~/.claude/settings.json`。下方 jq 命令会完成这个操作，`/reload-plugins` 后状态栏即可显示。如果跳过，SessionStart 钩子会在下次 Claude Code 重启时自动补上。
+
+安装后执行 `/reload-plugins` 激活。
+
 ### 方式一：手动克隆
 
 ```bash
@@ -84,6 +88,8 @@ jq '. + {
 ```
 
 ### 方式三：Marketplace
+
+> **已知问题**：Claude Code 当前从 marketplace 克隆时使用 SSH 而非 HTTPS，可能因 host key 验证失败而无法安装。这是[已知 Bug](https://github.com/anthropics/claude-code/issues/26588)。建议暂时使用方式一或方式二。
 
 通过 Claude Plugin Hub：
 
