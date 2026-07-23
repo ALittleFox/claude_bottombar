@@ -15,6 +15,15 @@ DIR_NAME=$(basename "$CWD")
 MODEL=$(echo "$INPUT_JSON" | jq -r '.model.display_name // .model.id // "--"')
 TRANSCRIPT=$(echo "$INPUT_JSON" | jq -r '.transcript_path // ""')
 USED_PCT=$(echo "$INPUT_JSON" | jq -r '.context_window.used_percentage // 0')
+# Detect active thinking via transcript modification time (last 5s)
+THINKING_ACTIVE=false
+if [[ -n "$TRANSCRIPT" && -f "$TRANSCRIPT" ]]; then
+    NOW=$(date +%s)
+    TS_MTIME=$(stat -f %m "$TRANSCRIPT" 2>/dev/null || stat -c %Y "$TRANSCRIPT" 2>/dev/null || echo 0)
+    if (( NOW - TS_MTIME < 5 )); then
+        THINKING_ACTIVE=true
+    fi
+fi
 
 # --- ANSI colors (define early, used in MCP formatting) ---------------
 DIM=$'\033[2m'
@@ -113,10 +122,11 @@ if [[ -n "$LSP_CONFIGURED" ]]; then
 fi
 
 # --- Format LSP display --------------------------------------------------
-LSP_DISPLAY=""
 if [[ -n "$LSP_PROJECT_ACTIVE" ]]; then
     LSP_ITEMS=$(echo "$LSP_PROJECT_ACTIVE" | sed 's/^/'"${GRN}"'/; s/$/'"${RST}"'/' | paste -sd ',' - | sed 's/,/'"${RST}"', '"${GRN}"'/g')
     LSP_DISPLAY="LSP: [ ${LSP_ITEMS} ]"
+else
+    LSP_DISPLAY="${DIM}LSP: no active LSP for this project${RST}"
 fi
 
 # Build directory display: dirname (git: branch)
@@ -126,13 +136,51 @@ else
     DIR_DISPLAY="${DIR_NAME}"
 fi
 
-# --- Output (dir, mcp, lsp) ------------------------------------------
-MAG=$'\033[35m'  # magenta for model name
-printf "${DIM}──${RST}  ${CYN}%-25s${RST}  ${MAG}%s${RST}  ${YLW}Tok: %s${RST}  ${DIM}──${RST}\n" \
-    "$DIR_DISPLAY" "$MODEL" "$TOK_DISPLAY"
-printf "${DIM}──${RST}  %s  ${DIM}──${RST}\n" \
-    "$MCP_DISPLAY"
-if [[ -n "$LSP_DISPLAY" ]]; then
-    printf "${DIM}──${RST}  %s  ${DIM}──${RST}\n" \
-        "$LSP_DISPLAY"
+# --- Cat expressions ---------------------------------------------------
+H=$(date +%H)
+if (( H >= 12 && H < 14 || H >= 22 || H < 10 )); then
+    # Sleep time
+    if $THINKING_ACTIVE; then
+        # Thinking in sleep: ??? with random @ # &
+        CHARS=("@" "#" "&")
+        C2=${CHARS[$(( RANDOM % 3 ))]}
+        CAT1=" /\\_/\\ "; CAT2="( =_= )"; CAT3=" ? ${C2} ? "
+    else
+        # Idle sleep: ZZZ
+        case $(( $(date +%s) % 3 )) in
+            0) CAT1=" /\\_/\\ "; CAT2="( =_= )"; CAT3=" Z z z " ;;
+            1) CAT1=" /\\_/\\ "; CAT2="( =_= )"; CAT3=" z Z z " ;;
+            2) CAT1=" /\\_/\\ "; CAT2="( =_= )"; CAT3=" z z Z " ;;
+        esac
+    fi
+elif $THINKING_ACTIVE; then
+    # Thinking while awake: cat morphs every 1s
+    case $(( $(date +%s) % 6 )) in
+        0) CAT1=" /\\_/\\&"; CAT2="( o.o )"; CAT3=" > ^ < " ;;
+        1) CAT1=" /\\_/\\#"; CAT2="(o. O )"; CAT3=" > ^ < " ;;
+        2) CAT1=" /\\_/\\?"; CAT2="( -.- )"; CAT3=" > ^ < " ;;
+        3) CAT1=" /\\_/\\!"; CAT2="( O.o )"; CAT3=" > ^ < " ;;
+        4) CAT1=" /\\_/\\$"; CAT2="( @.@ )"; CAT3=" > ^ < " ;;
+        5) CAT1=" /\\_/\\?"; CAT2="( o.o )"; CAT3=" > ^ < " ;;
+    esac
+else
+    # Awake idle: change every 2s
+    case $(( $(date +%s) / 2 % 7 )) in
+        0) CAT1=" /\\_/\\ "; CAT2="( o.o )"; CAT3=" > ^ < " ;;
+        1) CAT1=" /\\_/\\ "; CAT2="( o_- )"; CAT3=" > ^ < " ;;
+        2) CAT1=" /\\_/\\ "; CAT2="( -.- )"; CAT3=" > ^ < " ;;
+        3) CAT1=" /\\_/\\ "; CAT2="( >.< )"; CAT3=" > ^ < " ;;
+        4) CAT1=" /\\_/\\ "; CAT2="( oωo )"; CAT3=" > ^ < " ;;
+        5) CAT1=" /\\_/\\ "; CAT2="( ^.^ )"; CAT3=" > ^ < " ;;
+        6) CAT1=" /\\_/\\ "; CAT2="( o.o )"; CAT3=" > ^ < " ;;
+    esac
 fi
+
+# --- Output (dir, mcp, lsp) ------------------------------------------
+MAG=$'\033[35m'
+printf "${YLW}%s${RST}  ${DIM}──${RST}  ${CYN}%-25s${RST}  ${MAG}%s${RST}  ${YLW}Tok: %s${RST}  ${DIM}──${RST}\n" \
+    "$CAT1" "$DIR_DISPLAY" "$MODEL" "$TOK_DISPLAY"
+printf "${YLW}%s${RST}  ${DIM}──${RST}  %-55s  ${DIM}──${RST}\n" \
+    "$CAT2" "$MCP_DISPLAY"
+printf "${YLW}%s${RST}  ${DIM}──${RST}  %-55s  ${DIM}──${RST}\n" \
+    "$CAT3" "$LSP_DISPLAY"

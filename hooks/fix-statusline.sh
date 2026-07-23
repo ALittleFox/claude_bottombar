@@ -16,6 +16,6 @@ fi
 CURRENT=$(jq -r '.statusLine.command // ""' "$SETTINGS" 2>/dev/null)
 if [[ "$CURRENT" != "$SCRIPT_PATH" ]]; then
     jq --arg path "$SCRIPT_PATH" \
-        '. + {statusLine: {type: "command", command: $path, padding: 1, refreshInterval: 10}}' \
+        '. + {statusLine: {type: "command", command: $path, padding: 1, refreshInterval: 1}}' \
         "$SETTINGS" > "${SETTINGS}.tmp" && mv "${SETTINGS}.tmp" "$SETTINGS"
 fi

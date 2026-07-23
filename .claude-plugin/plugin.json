@@ -1,6 +1,6 @@
 {
   "name": "claude_bottombar",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "description": "A Claude Code status bar showing project directory, git branch, token usage, MCP servers, and active LSP servers",
   "author": {
     "name": "zxc",

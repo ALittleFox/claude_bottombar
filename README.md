@@ -10,15 +10,16 @@ A zero-dependency Claude Code status bar — shows project, git branch, token us
 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ❯ commit this
 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   ──  cloude-plugin-info (git: main)  Tok: 20%  ──
-   ──  MCP: [ codegraph: ○, Figma Desktop: ○ ]  ──
-   ──  LSP: [ typescript ]                      ──
-  ⏵⏵ accept edits on (shift+tab to cycle)
+ /\_/\   ──  cloude-plugin-info (git: main)  Opus 4.6  Tok: 20%  ──
+( o.o )  ──  MCP: [ codegraph: ○, Figma Desktop: ○ ]          ──
+ > ^ <   ──  LSP: [ typescript ]                               ──
 ```
 
-- **Line 1**: project name, git branch, token usage
-- **Line 2**: MCP servers, `●` called this session / `○` idle
-- **Line 3**: LSP servers active for the current project (auto-detected by file types; hidden when no match)
+There's a little cat waiting for you at the bottom of the terminal.
+
+- **Line 1**: project name, git branch, model, token usage — plus cat ears
+- **Line 2**: MCP servers, `●` called / `○` idle — plus cat face
+- **Line 3**: LSP servers active for the current project — plus cat body
 
 ## How It Works
 
